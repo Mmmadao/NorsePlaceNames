@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Norse Place Name Generator</title>
+    <style>
+        body {
+            font-family: 'Garamond', serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #003300;
+            margin-top: 20px;
+        }
+        select, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 1em;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 2em;
+            color: #005500;
+            font-weight: bold;
+        }
+        .description {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #555;
+        }
+        .category {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+        .category h2 {
+            color: #003300;
+        }
+    </style>
+</head>
+<body>
+    <h1>Norse Place Name Generator</h1>
+
+    <div class="category">
+        <label for="prefix-category">Select Prefix Category:</label>
+        <select id="prefix-category">
+            <option value="1">Honor and Social Status</option>
+            <option value="2">Family and Kin</option>
+            <option value="3">Religion and Mythology</option>
+            <option value="4">Warfare and Weaponry</option>
+            <option value="5">Law and Justice</option>
+            <option value="6">Trade and Economy</option>
+            <option value="7">Agriculture and Navigation</option>
+            <option value="8">Art and Culture</option>
+            <option value="9">Weather and Seasons</option>
+        </select>
+    </div>
+
+    <div class="category">
+        <label for="suffix-category">Select Suffix Category:</label>
+        <select id="suffix-category">
+            <option value="1">Water and Sea</option>
+            <option value="2">Mountains and Highlands</option>
+            <option value="3">Forest and Vegetation</option>
+            <option value="4">Agriculture and Farming</option>
+            <option value="5">Coast and Sea Areas</option>
+            <option value="6">Springs and Brooks</option>
+            <option value="7">Islands and Islets</option>
+        </select>
+    </div>
+
+    <button onclick="generateName()">Generate Norse Name</button>
+
+    <div id="result" class="result"></div>
+    <div id="description" class="description"></div>
+
+    <script>
+        const prefixes = {
+            1: ["Ær", "Drótt", "Styrk", "Heið", "Vísi", "Þrótt", "Hǫfð", "Sigr", "Rík", "Virð"],
+            2: ["Ætt", "Frænd", "Bróð", "Móð", "Fað", "Arf", "Kin", "Fóstr", "Vörn", "Traust"],
+            3: ["Óð", "Þór", "Freyj", "Valkyr", "Ás", "Van", "Blót", "Rún", "Galdr", "Seið"],
+            4: ["Hjálm", "Skjald", "Sverð", "Spjót", "Vápn", "Drótt", "Víg", "Rǫnd", "Brynj", "Hǫgg"],
+            5: ["Lǫg", "Þing", "Dóm", "Rett", "Vitn", "Mál", "Eið", "Réttl", "Sek", "Fǫr"],
+            6: ["Markað", "Kaup", "Silfr", "Fé", "Varð", "Gull", "Smið", "Lán", "Verzlun", "Gjǫf"],
+            7: ["Hafr", "Lind", "Sá", "Rek", "Hrút", "Fisk", "Korn", "Bát", "Flot", "Mjelk"],
+            8: ["Skald", "Rún", "Brag", "Vís", "Ljóð", "Saga", "Teikn", "Hǫgg", "List", "Smið"],
+            9: ["Hjálm", "Vetr", "Sumar", "Hǫst", "Vár", "Snæ", "Regn", "Sól", "Storm", "Frost"]
+        };
+
+        const suffixes = {
+            1: ["sjo", "vatn", "elv", "á", "strǫnd", "vík", "höfn", "holmr"],
+            2: ["fjall", "heiði", "dalr", "áss", "bakki", "bergr", "hǫfð"],
+            3: ["skógr", "lundr", "mǫrk", "vǫllr", "skógarr", "vǫll"],
+            4: ["ákr", "garðr", "teigr", "býr", "jord", "tun"],
+            5: ["nes", "bukt", "revet", "fjǫrðr", "sand", "vǫllr"],
+            6: ["keld", "bekkr", "vǫllr", "brunnr", "þverr"],
+            7: ["ey", "holmr", "skerí", "grunn", "hólmr", "sund"]
+        };
+
+        const prefixDescriptions = {
+          1: [
+              "Ær (Old Norse: æra - honor)",
+              "Drótt (Old Norse: dróttinn - lord, leader)",
+              "Styrk (Old Norse: styrkr - strength)",
+              "Heið (Old Norse: heiðr - honor, dignity)",
+              "Vísi (Old Norse: vísir - leader, prince)",
+              "Þrótt (Old Norse: þrótt - power, strength)",
+              "Hǫfð (Old Norse: hǫfðingi - chieftain)",
+              "Sigr (Old Norse: sigr - victory)",
+              "Rík (Old Norse: ríkr - powerful)",
+              "Virð (Old Norse: virðing - honor, respect)"
+          ],
+          2: [
+              "Ætt (Old Norse: ætt - lineage, family)",
+              "Frænd (Old Norse: frændi - relative)",
+              "Bróð (Old Norse: bróðir - brother)",
+              "Móð (Old Norse: móðir - mother)",
+              "Fað (Old Norse: faðir - father)",
+              "Arf (Old Norse: arfr - inheritance)",
+              "Kin (Old Norse: kyn - lineage, descent)",
+              "Fóstr (Old Norse: fóstri - fosterer)",
+              "Vörn (Old Norse: vörn - protection)",
+              "Traust (Old Norse: traust - trust, security)"
+          ],
+          3: [
+              "Óð (Old Norse: Óðinn - Odin)",
+              "Þór (Old Norse: Þórr - Thor)",
+              "Freyj (Old Norse: Freyja - Freyja)",
+              "Valkyr (Old Norse: valkyrja - valkyrie)",
+              "Ás (Old Norse: áss - god)",
+              "Van (Old Norse: vanir - a group of gods)",
+              "Blót (Old Norse: blót - sacrifice)",
+              "Rún (Old Norse: rún - rune)",
+              "Galdr (Old Norse: galdr - magic)",
+              "Seið (Old Norse: seiðr - sorcery)"
+          ],
+          4: [
+              "Hjálm (Old Norse: hjálmr - helmet)",
+              "Skjald (Old Norse: skjǫldr - shield)",
+              "Sverð (Old Norse: sverð - sword)",
+              "Spjót (Old Norse: spjót - spear)",
+              "Vápn (Old Norse: vápn - weapon)",
+              "Drótt (Old Norse: drótt - retinue)",
+              "Víg (Old Norse: víg - battle, strife)",
+              "Rǫnd (Old Norse: rǫnd - shield rim)",
+              "Brynj (Old Norse: brynja - armor)",
+              "Hǫgg (Old Norse: hǫggva - to cut, chop)"
+          ],
+          5: [
+              "Lǫg (Old Norse: lǫg - law)",
+              "Þing (Old Norse: þing - assembly, court)",
+              "Dóm (Old Norse: dómr - judgment, court)",
+              "Rett (Old Norse: rétt - justice)",
+              "Vitn (Old Norse: vitni - witness)",
+              "Mál (Old Norse: mál - case, speech)",
+              "Eið (Old Norse: eiðr - oath)",
+              "Réttl (Old Norse: réttlæti - justice)",
+              "Sek (Old Norse: sekr - guilty)",
+              "Fǫr (Old Norse: fǫr - case, legal process)"
+          ],
+          6: [
+              "Markað (Old Norse: markaðr - market)",
+              "Kaup (Old Norse: kaup - purchase, trade)",
+              "Silfr (Old Norse: silfr - silver)",
+              "Fé (Old Norse: fé - money, wealth)",
+              "Varð (Old Norse: varðveita - to protect, preserve)",
+              "Gull (Old Norse: gull - gold)",
+              "Smið (Old Norse: smiðr - craftsman)",
+              "Lán (Old Norse: lán - loan, prosperity)",
+              "Verzlun (Old Norse: verzlun - trade)",
+              "Gjǫf (Old Norse: gjǫf - gift)"
+          ],
+          7: [
+              "Hafr (Old Norse: hafr - goat)",
+              "Lind (Old Norse: lind - lime tree, spring)",
+              "Sá (Old Norse: sá - sowing)",
+              "Rek (Old Norse: rek - driftwood)",
+              "Hrút (Old Norse: hrútr - ram)",
+              "Fisk (Old Norse: fiskr - fish)",
+              "Korn (Old Norse: korn - grain)",
+              "Bát (Old Norse: bátr - boat)",
+              "Flot (Old Norse: floti - fleet)",
+              "Mjelk (Old Norse: mjølk - milk)"
+          ],
+          8: [
+              "Skald (Old Norse: skald - poet)",
+              "Rún (Old Norse: rún - rune)",
+              "Brag (Old Norse: bragr - poetry)",
+              "Vís (Old Norse: vísur - verses)",
+              "Ljóð (Old Norse: ljóð - song, poem)",
+              "Saga (Old Norse: saga - history, tale)",
+              "Teikn (Old Norse: teikn - sign)",
+              "Hǫgg (Old Norse: hǫggva - to cut, chop)",
+              "List (Old Norse: list - art, skill)",
+              "Smið (Old Norse: smiðr - craftsman, artist)"
+          ],
+          9: [
+              "Hjálm (Old Norse: hjálmr - helmet)",
+              "Vetr (Old Norse: vetr - winter)",
+              "Sumar (Old Norse: sumar - summer)",
+              "Hǫst (Old Norse: hǫst - autumn)",
+              "Vár (Old Norse: vár - spring)",
+              "Snæ (Old Norse: snær - snow)",
+              "Regn (Old Norse: regn - rain)",
+              "Sól (Old Norse: sól - sun)",
+              "Storm (Old Norse: stormr - storm)",
+              "Frost (Old Norse: frost - frost)"
+          ]
+        };
+
+        const suffixDescriptions = {
+          1: [
+              "sjo (Old Norse: sjór - sea)",
+              "vatn (Old Norse: vatn - water)",
+              "elv (Old Norse: elfr - river)",
+              "á (Old Norse: á - river)",
+              "strǫnd (Old Norse: strǫnd - shore)",
+              "vík (Old Norse: vík - bay)",
+              "höfn (Old Norse: höfn - harbor)",
+              "holmr (Old Norse: holmr - islet)"
+          ],
+          2: [
+              "fjall (Old Norse: fjall - mountain)",
+              "heiði (Old Norse: heiði - heath)",
+              "dalr (Old Norse: dalr - valley)",
+              "áss (Old Norse: áss - ridge)",
+              "bakki (Old Norse: bakki - bank)",
+              "bergr (Old Norse: bergr - rock)",
+              "hǫfð (Old Norse: hǫfð - headland)"
+          ],
+          3: [
+              "skógr (Old Norse: skógr - forest)",
+              "lundr (Old Norse: lundr - grove)",
+              "mǫrk (Old Norse: mǫrk - woodland)",
+              "vǫllr (Old Norse: vǫllr - field)",
+              "skógarr (Old Norse: skógr + garðr - woodland garden)",
+              "vǫll (Old Norse: vǫllr - field)"
+          ],
+          4: [
+              "ákr (Old Norse: akrr - field)",
+              "garðr (Old Norse: garðr - farm)",
+              "teigr (Old Norse: teigr - parcel)",
+              "býr (Old Norse: býr - town)",
+              "jord (Old Norse: jǫrð - earth)",
+              "tun (Old Norse: tún - farmyard)"
+          ],
+          5: [
+              "nes (Old Norse: nes - promontory)",
+              "bukt (Old Norse: bǫrkr - bay)",
+              "revet (Old Norse: rǫf - reef)",
+              "fjǫrðr (Old Norse: fjǫrðr - fjord)",
+              "sand (Old Norse: sǫnd - sand)",
+              "vǫllr (Old Norse: vǫllr - sandbank)"
+          ],
+          6: [
+              "keld (Old Norse: keld - spring)",
+              "bekkr (Old Norse: bekkr - brook)",
+              "vǫllr (Old Norse: vǫllr - field)",
+              "brunnr (Old Norse: brunnr - well)",
+              "þverr (Old Norse: þverr - cross, brook)"
+          ],
+          7: [
+              "ey (Old Norse: ey - island)",
+              "holmr (Old Norse: holmr - islet)",
+              "skerí (Old Norse: sker - skerry)",
+              "grunn (Old Norse: grunn - shoal)",
+              "hólmr (Old Norse: hólmr - islet)",
+              "sund (Old Norse: sund - strait)"
+          ]
+        };
+
+        function getRandomElement(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateName() {
+            const prefixCategory = document.getElementById("prefix-category").value;
+            const suffixCategory = document.getElementById("suffix-category").value;
+
+            const prefixList = prefixes[prefixCategory];
+            const suffixList = suffixes[suffixCategory];
+
+            const prefix = getRandomElement(prefixList);
+            const suffix = getRandomElement(suffixList);
+
+            const resultName = prefix + suffix;
+            const prefixDesc = prefixDescriptions[prefixCategory][prefixList.indexOf(prefix)];
+            const suffixDesc = suffixDescriptions[suffixCategory][suffixList.indexOf(suffix)];
+
+            document.getElementById("result").innerText = resultName;
+            document.getElementById("description").innerHTML = `<strong>Prefix:</strong> ${prefixDesc}<br><strong>Suffix:</strong> ${suffixDesc}`;
+        }
+    </script>
+</body>
+</html>
